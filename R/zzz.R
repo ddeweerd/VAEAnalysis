@@ -1,11 +1,14 @@
 .onLoad <- function(libname, pkgname){
 
-  path <- system.file(package = "VAEanalysis")
-  VAE_builder <- reticulate::import_from_path(module = "VAE_builder", path = path)
+  encoder_path <- system.file("extdata", "encoder.h5", package = "VAEanalysis")
+  decoder_path <- system.file("extdata", "decoder.h5", package = "VAEanalysis")
+  vae_path <- system.file("extdata", "VAE.h5", package = "VAEanalysis")
 
-  path <- system.file(package = "VAEanalysis")
-  utils_VAE <- reticulate::import_from_path(module = "utils_VAE", path = path)
+  encoder <<- keras::load_model_hdf5(encoder_path)
+  decoder <<- keras::load_model_hdf5(decoder_path)
+  vae <<- keras::load_model_hdf5(encoder_path)
 
-  load_model <<- utils_VAE$load_model
+
+
 
 }

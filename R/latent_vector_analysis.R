@@ -1,7 +1,7 @@
 #' Latent vector
 #' @export
-get_gene_ranks <- function(latent_vector, boost_factor, mod, n_comparison){
-  decoded_vector <- decode_lv(latent_vector, boost_factor, mod)
+get_gene_ranks <- function(latent_vector, boost_factor, decoder, n_comparison){
+  decoded_vector <- decode_lv(latent_vector, boost_factor, decoder)
 
   random_preds <- get_random_profiles(n_comparison)
 
@@ -10,18 +10,18 @@ get_gene_ranks <- function(latent_vector, boost_factor, mod, n_comparison){
     magrittr::set_names(genenames)
 }
 #' @export
-decode_lv <- function(latent_vector, boost_factor, mod){
+decode_lv <- function(latent_vector, boost_factor, decoder){
   #Sets the correct data type (matrix) and amplifies signal
   latent_vector <- matrix(latent_vector*(boost_factor), 1)
 
-  decoded_signal <- mod$decoder %>% predict(latent_vector)
+  decoded_signal <- decoder %>% predict(latent_vector)
   decoded_signal[1,]
 }
 
 #' @export
-get_random_profiles <- function(n_comparison){
+get_random_profiles <- function(n_comparison, decoder){
   random_lsp <- matrix(rnorm(64 * n_comparison), n_comparison)
-  mod$decoder %>% predict(random_lsp) %>%
+  decoder %>% predict(random_lsp) %>%
     t()
 }
 
@@ -39,27 +39,27 @@ euclidian_distance <- function(lv1, lv2){
 }
 
 #' @export
-get_d_bar_cosine <- function(patient_counts, control_counts, mod){
-  apply(get_latent_space(patient_counts, mod), 1, function(y)
-    apply(get_latent_space(control_counts, mod), 1, function(x) cosine_distance(x,y))) %>%
+get_d_bar_cosine <- function(patient_counts, control_counts, encoder){
+  apply(get_latent_space(patient_counts, encoder), 1, function(y)
+    apply(get_latent_space(control_counts, encoder), 1, function(x) cosine_distance(x,y))) %>%
     mean()
 }
 #' @export
-get_d_bar_control_cosine <- function(control_counts, mod){
-  lsp <- get_latent_space(control_counts, mod)
+get_d_bar_control_cosine <- function(control_counts, encoder){
+  lsp <- get_latent_space(control_counts, encoder)
   dist_mat <- sapply(X = 1:nrow(lsp), FUN = function(y) sapply(X = 1:nrow(lsp), FUN = function(x)cosine_distance(lsp[x, ], lsp[y, ])))
   mean(dist_mat[lower.tri(dist_mat)])
 }
 
 #' @export
-get_d_bar_euclid <- function(patient_counts, control_counts, mod){
-  apply(get_latent_space(patient_counts, mod), 1, function(y)
-    apply(get_latent_space(control_counts, mod), 1, function(x) euclidian_distance(x,y))) %>%
+get_d_bar_euclid <- function(patient_counts, control_counts, encoder){
+  apply(get_latent_space(patient_counts, encoder), 1, function(y)
+    apply(get_latent_space(control_counts, encoder), 1, function(x) euclidian_distance(x,y))) %>%
     mean()
 }
 #' @export
-get_d_bar_control_euclid <- function(control_counts, mod){
-  lsp <- get_latent_space(control_counts, mod)
+get_d_bar_control_euclid <- function(control_counts, encoder){
+  lsp <- get_latent_space(control_counts, encoder)
   dist_mat <- sapply(X = 1:nrow(lsp), FUN = function(y) sapply(X = 1:nrow(lsp), FUN = function(x)euclidian_distance(lsp[x, ], lsp[y, ])))
   mean(dist_mat[lower.tri(dist_mat)])
 }

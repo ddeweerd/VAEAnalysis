@@ -4,7 +4,7 @@
 \alias{get_gene_ranks}
 \title{Latent vector}
 \usage{
-get_gene_ranks(latent_vector, boost_factor, mod, n_comparison)
+get_gene_ranks(latent_vector, boost_factor, decoder, n_comparison)
 }
 \description{
 Latent vector
