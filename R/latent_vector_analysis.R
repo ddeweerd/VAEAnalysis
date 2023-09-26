@@ -1,3 +1,4 @@
+#' Latent vector
 #' @export
 get_gene_ranks <- function(latent_vector, boost_factor, mod, n_comparison){
   decoded_vector <- decode_lv(latent_vector, boost_factor, mod)
