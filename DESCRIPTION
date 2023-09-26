@@ -12,7 +12,6 @@ Imports:
     dplyr,
     keras,
     magrittr,
-    reticulate,
     tensorflow
 Encoding: UTF-8
 LazyData: true
