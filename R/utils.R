@@ -1,7 +1,6 @@
 #' @import keras
 #' @import dplyr
 #' @import reticulate
-#' @import RSQLite
 #' @import magrittr
 #' @import tensorflow
 
