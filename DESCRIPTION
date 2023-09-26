@@ -13,8 +13,6 @@ Imports:
     keras,
     magrittr,
     reticulate,
-    RSQLite,
-    STRINGdb,
     tensorflow
 Encoding: UTF-8
 LazyData: true
