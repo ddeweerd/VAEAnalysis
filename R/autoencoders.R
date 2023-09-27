@@ -56,7 +56,7 @@ extract_mu_log_var <- function(model, input_data) {
   mu_values <- predictions[[1]]
   log_var_values <- predictions[[2]]
 
-  list(mu = mu_values, log_var = log_var_values)
+  list(mu = colMeans(mu_values), log_var = colMean(log_var_values))
 }
 
 
@@ -81,15 +81,11 @@ sample_latent_point <- function(mu, log_var, n_samples) {
 #'@export
 generate_data <- function(vae_decoder, mu, log_var, n_samples) {
 
+
   sampled_points <- sample_latent_point(mu, log_var, n_samples)
 
-  generated_data_list <- vector("list", n_samples)
 
-  for (i in 1:n_samples) {
-    generated_data_list[[i]] <- vae_decoder %>% predict(matrix(sampled_points[i,], ncol = 64))
-  }
-
-  generated_data <- do.call(rbind, generated_data_list)
+  generated_data <- vae_decoder %>% predict(sampled_points)
 
 generated_data
 }
