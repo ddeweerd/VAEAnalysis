@@ -40,3 +40,44 @@ slice_history <- function(history, n_epochs){
 
   history
 }
+
+
+#'@export
+extract_mu_log_var <- function(model, input_data) {
+
+  mu_layer <- model$get_layer(name = "mu")
+  log_var_layer <- model$get_layer(name = "log_var")
+
+  auxiliary_model <- keras_model(inputs = model$input, outputs = list(mu_layer$output, log_var_layer$output))
+
+
+  predictions <- auxiliary_model %>% predict(input_data)
+
+  mu_values <- predictions[[1]]
+  log_var_values <- predictions[[2]]
+
+  list(mu = mu_values, log_var = log_var_values)
+}
+
+
+sample_latent_point <- function(mu, log_var) {
+
+  sigma <- exp(log_var / 2)
+
+  epsilon <- array(rnorm(length(mu)), dim = dim(mu))
+
+  sampled_point <- mu + sigma * epsilon
+
+  sampled_point
+
+}
+
+#'@export
+generate_data <- function(vae_decoder, mu, log_var) {
+
+  sampled_point <- sample_latent_point(mu, log_var)
+
+  generated_data <- vae_decoder %>% predict(sampled_point)
+
+  generated_data
+}
