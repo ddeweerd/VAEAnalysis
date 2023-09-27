@@ -64,20 +64,26 @@ sample_latent_point <- function(mu, log_var) {
 
   sigma <- exp(log_var / 2)
 
-  epsilon <- array(rnorm(length(mu)), dim = dim(mu))
 
-  sampled_point <- mu + sigma * epsilon
+  sampled_points <- matrix(0, n_samples, length(mu))
 
-  sampled_point
+  for (i in 1:n_samples) {
+
+    epsilon <- rnorm(length(mu))
+
+
+    sampled_points[i,] <- mu + sigma * epsilon
+  }
+  sampled_points
 
 }
 
 #'@export
-generate_data <- function(vae_decoder, mu, log_var) {
+generate_data <- function(vae_decoder, mu, log_var, n_samples) {
 
-  sampled_point <- sample_latent_point(mu, log_var)
+  sampled_points <- sample_latent_point(mu, log_var, n_samples)
 
-  generated_data <- vae_decoder %>% predict(sampled_point)
+  generated_data <- vae_decoder %>% predict(sampled_points)
 
   generated_data
 }
