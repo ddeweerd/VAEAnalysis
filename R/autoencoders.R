@@ -56,7 +56,7 @@ extract_mu_log_var <- function(model, input_data) {
   mu_values <- predictions[[1]]
   log_var_values <- predictions[[2]]
 
-  list(mu = colMeans(mu_values), log_var = colMean(log_var_values))
+  list(mu = colMeans(mu_values), log_var = colMeans(log_var_values))
 }
 
 
