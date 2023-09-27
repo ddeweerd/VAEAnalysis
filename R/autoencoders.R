@@ -60,7 +60,7 @@ extract_mu_log_var <- function(model, input_data) {
 }
 
 
-sample_latent_point <- function(mu, log_var) {
+sample_latent_point <- function(mu, log_var, n_samples) {
 
   sigma <- exp(log_var / 2)
 
