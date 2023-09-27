@@ -83,7 +83,13 @@ generate_data <- function(vae_decoder, mu, log_var, n_samples) {
 
   sampled_points <- sample_latent_point(mu, log_var, n_samples)
 
-  generated_data <- vae_decoder %>% predict(sampled_points)
+  generated_data_list <- vector("list", n_samples)
 
-  generated_data
+  for (i in 1:n_samples) {
+    generated_data_list[[i]] <- vae_decoder %>% predict(matrix(sampled_points[i,], ncol = 64))
+  }
+
+  generated_data <- do.call(rbind, generated_data_list)
+
+generated_data
 }
