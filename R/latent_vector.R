@@ -5,7 +5,7 @@
 
 #'@export
 get_condition_latent_vector <- function(patient_counts, control_counts, encoder){
-  colMeans(get_latent_space(patient_counts, mod)) - colMeans(get_latent_space(control_counts, encoder))
+  colMeans(get_latent_space(patient_counts, encoder)) - colMeans(get_latent_space(control_counts, encoder))
 }
 #'@export
 get_latent_space <- function(counts, encoder){
