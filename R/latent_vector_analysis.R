@@ -1,7 +1,7 @@
 #' Latent vector
 #' @export
-get_gene_ranks <- function(latent_vector, boost_factor, decoder, n_comparison){
-  decoded_vector <- decode_lv(latent_vector, boost_factor, decoder)
+get_gene_ranks <- function(latent_vector, boost_factor, mod, n_comparison){
+  decoded_vector <- decode_lv(latent_vector, boost_factor, mod)
 
   random_preds <- get_random_profiles(n_comparison)
 
@@ -10,18 +10,18 @@ get_gene_ranks <- function(latent_vector, boost_factor, decoder, n_comparison){
     magrittr::set_names(genenames)
 }
 #' @export
-decode_lv <- function(latent_vector, boost_factor, decoder){
+decode_lv <- function(latent_vector, boost_factor, mod){
   #Sets the correct data type (matrix) and amplifies signal
   latent_vector <- matrix(latent_vector*(boost_factor), 1)
 
-  decoded_signal <- decoder %>% predict(latent_vector)
+  decoded_signal <- mod$decoder %>% predict(latent_vector)
   decoded_signal[1,]
 }
 
 #' @export
-get_random_profiles <- function(n_comparison, decoder){
+get_random_profiles <- function(n_comparison, mod){
   random_lsp <- matrix(rnorm(64 * n_comparison), n_comparison)
-  decoder %>% predict(random_lsp) %>%
+  mod$decoder %>% predict(random_lsp) %>%
     t()
 }
 
