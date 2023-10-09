@@ -3,7 +3,7 @@
 get_gene_ranks <- function(latent_vector, boost_factor, decoder, n_comparison){
   decoded_vector <- decode_lv(latent_vector, boost_factor, decoder)
 
-  random_preds <- get_random_profiles(n_comparison)
+  random_preds <- get_random_profiles(n_comparison, decoder)
 
   sapply(1:length(decoded_vector), check_gene_rank, decoded_vector, random_preds) %>%
     apply(., 2, function(x) which(x == 1)) %>%
