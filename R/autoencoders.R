@@ -125,3 +125,14 @@ load_vae_model <- function() {
 
   return(VAE)
 }
+
+#' @export
+load_decoder <- function(){
+  decoder <- keras::load_model_hdf5(system.file("extdata", "decoder.h5", package = "VAEanalysis"))
+  return(decoder)
+}
+
+#' @export
+load_encoder <- function(){
+  encoder <- keras::load_model_hdf5(system.file("extdata", "encoder.h5", package = "VAEanalysis"))
+}
