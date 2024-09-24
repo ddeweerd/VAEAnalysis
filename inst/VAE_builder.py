@@ -7,7 +7,7 @@ from keras.layers import Dense, LeakyReLU, Dropout, Lambda
 from tensorflow.keras.activations import sigmoid
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import MeanSquaredError
-from keras import backend as K
+import tensorflow as tf
 import os
 import pickle
 from tensorflow.python.framework.ops import disable_eager_execution
@@ -19,7 +19,7 @@ Created on Wed Aug 10 10:09:23 2022
 @author: dirk
 """
 
-disable_eager_execution()
+#disable_eager_execution()
 
 class VAE_class():
     def __init__(self,
@@ -61,10 +61,10 @@ class VAE_class():
     
         def sampling(args):
             mu, log_var = args
-            epsilon = K.random_normal(shape=K.shape(mu), mean=0., stddev=1.)
-            return mu + K.exp(log_var / 2) * epsilon    
+            epsilon = tf.random_normal(shape=tf.shape(mu), mean=0., stddev=1.)
+            return mu + tf.exp(log_var / 2) * epsilon    
     
-        encoder_output = Lambda(sampling, name='encoder_output')([self.mu, self.log_var])
+        encoder_output = Lambda(sampling, name='encoder_output', output_shape=(self.latent_space_shape,))([self.mu, self.log_var])
         self.mumodel = Model(encoder_input, self.mu)
         self.logmodel = Model(encoder_input, self.log_var)
         self.encoder = Model(encoder_input, encoder_output)
@@ -102,11 +102,11 @@ class VAE_class():
 
             ### COMPILATION
             def vae_r_loss(y_true, y_pred):
-                r_loss = K.mean(K.square(y_true - y_pred), axis = 1)
+                r_loss = tf.mean(tf.square(y_true - y_pred), axis = 1)
                 return r_loss_factor * r_loss
 
             def vae_kl_loss(y_true, y_pred):
-               kl_loss =  -0.5 * K.sum(1 + self.log_var - K.square(self.mu) - K.exp(self.log_var), axis = 1)
+               kl_loss =  -0.5 * tf.sum(1 + self.log_var - tf.square(self.mu) - tf.exp(self.log_var), axis = 1)
                return kl_loss
 
             def vae_loss(y_true, y_pred):
