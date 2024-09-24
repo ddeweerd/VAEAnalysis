@@ -1,4 +1,4 @@
-#' @import keras3
+#' @import keras
 #' @import dplyr
 #' @import magrittr
 #' @import tensorflow

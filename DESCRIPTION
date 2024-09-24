@@ -10,7 +10,7 @@ Description: More about what it does (maybe more than one line) Use four
 License: MIT + file LICENSE
 Imports:
     dplyr,
-    keras3,
+    keras,
     magrittr,
     tensorflow
 Remotes:
