@@ -89,3 +89,39 @@ generate_data <- function(vae_decoder, mu, log_var, n_samples) {
 
 generated_data
 }
+
+
+
+#' @return VAE model
+#' @export
+load_vae_model <- function() {
+  library(keras)
+  library(tensorflow)
+
+  tf <- import("tensorflow")
+
+  # Define the sampling function
+  sampling <- function(args) {
+    mu <- args[[1]]
+    log_var <- args[[2]]
+    epsilon <- tf$random$normal(shape = tf$shape(mu), mean = 0., stddev = 1.)
+    mu + tf$exp(log_var / 2) * epsilon
+  }
+
+  # Load encoder
+  encoder <- keras::load_model_hdf5(
+    system.file("extdata", "encoder.h5", package = "VAEanalysis"),
+    custom_objects = list(sampling = sampling)
+  )
+
+  # Load decoder
+  decoder <- keras::load_model_hdf5(system.file("extdata", "decoder.h5", package = "VAEanalysis"))
+
+  # Build VAE model
+  vae_input <- encoder$input
+  vae_output <- decoder(encoder$output)
+
+  VAE <- keras_model(inputs = vae_input, outputs = vae_output)
+
+  return(VAE)
+}
