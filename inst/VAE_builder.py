@@ -19,7 +19,7 @@ Created on Wed Aug 10 10:09:23 2022
 @author: dirk
 """
 
-disable_eager_execution()
+#disable_eager_execution()
 
 class VAE_class():
     def __init__(self,
@@ -64,7 +64,7 @@ class VAE_class():
             epsilon = K.random_normal(shape=K.shape(mu), mean=0., stddev=1.)
             return mu + K.exp(log_var / 2) * epsilon    
     
-        encoder_output = Lambda(sampling, name='encoder_output')([self.mu, self.log_var])
+        encoder_output = Lambda(sampling, name='encoder_output', output_shape=(self.latent_space_shape,))([self.mu, self.log_var])
         self.mumodel = Model(encoder_input, self.mu)
         self.logmodel = Model(encoder_input, self.log_var)
         self.encoder = Model(encoder_input, encoder_output)
