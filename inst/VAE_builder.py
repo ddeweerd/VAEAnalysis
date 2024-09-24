@@ -7,7 +7,7 @@ from keras.layers import Dense, LeakyReLU, Dropout, Lambda
 from tensorflow.keras.activations import sigmoid
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import MeanSquaredError
-from keras import backend as K
+import tensorflow as tf
 import os
 import pickle
 from tensorflow.python.framework.ops import disable_eager_execution
